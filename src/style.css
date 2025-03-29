@@ -22,10 +22,16 @@ body {
 main {
   width: 100%;
 }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 #input {
   visibility: hidden;
 }
-#game {
+#game,
+#results {
   display: flex;
   flex-direction: column;
   width: 100%;
