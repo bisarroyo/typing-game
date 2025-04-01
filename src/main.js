@@ -1,6 +1,4 @@
 import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
 
 import { text1 } from './data.js'
 
@@ -11,6 +9,7 @@ const $$ = (element) => document.querySelectorAll(element)
 const results = $('#results')
 const wpmResult = $('#wpm-result')
 const timeenlapsed = $('#time-enlapsed')
+const reload = $('#reload')
 
 // game section
 const game = $('#game')
@@ -25,17 +24,24 @@ const INITIAL_TIME = 0
 let letters = text1.split('')
 let words = text1.split(' ')
 let wordsAverage = parseInt(letters.length) / parseInt(words.length)
-let currentTime = INITIAL_TIME
+let currentTime
 let isPlaying
 
 initGame()
 initEvents()
+
+// reload the game
+reload.addEventListener('click', function () {
+  initGame()
+  initEvents()
+})
 
 function initGame() {
   game.style.display = 'flex'
   results.style.display = 'none'
 
   isPlaying = false
+  currentTime = 0
 
   timer.textContent = INITIAL_TIME
   let gameWords = letters.map((letter, index) => {
@@ -48,6 +54,7 @@ function initGame() {
 }
 
 function initEvents() {
+  // TODO remove event listener when game end
   document.addEventListener('keydown', startPlaying)
   document.addEventListener('keydown', onkeyDown)
   document.addEventListener('keydown', onkeyUp)
@@ -57,13 +64,14 @@ function startPlaying() {
   input.focus()
   if (!isPlaying) {
     isPlaying = true
+
     const gameInterval = setInterval(() => {
-      currentTime++
-      timer.textContent = currentTime
-      // if (currentTime == 0) {
-      //   clearInterval(gameInterval)
-      //   gameOver()
-      // }
+      if (!isPlaying) {
+        clearInterval(gameInterval)
+      } else {
+        currentTime++
+        timer.textContent = currentTime
+      }
     }, 1000)
     const wpmCalc = setInterval(() => {
       wpm.innerText = calculateWordsPerMinute()
@@ -107,6 +115,7 @@ function onkeyUp(event) {
   let activeContent = active.innerText.trim()
 
   let { key } = event
+  console.log(key)
 
   let validkey = key.length === 1 ? activeContent : 'invalid'
   if (validkey === 'invalid') {
@@ -126,15 +135,19 @@ function gameOver() {
   isPlaying = false
   game.style.display = 'none'
   results.style.display = 'flex'
+  results.classList.add('result-animation')
 
   wpmResult.innerText = calculateWordsPerMinute()
-  timeenlapsed.innerText = currentTime
-}
-gameOver()
+  timeenlapsed.innerText = currentTime + ' seg'
 
+  // remove events at the end of the fame
+  document.removeEventListener('keydown', startPlaying)
+  document.removeEventListener('keydown', onkeyDown)
+  document.removeEventListener('keydown', onkeyUp)
+}
+// gameOver()
 function calculateWordsPerMinute() {
   let correctWords = $$('.correct').length / wordsAverage
-  console.log(correctWords)
   if (correctWords) {
     let result = Math.floor(correctWords / (currentTime / 60))
     return result
