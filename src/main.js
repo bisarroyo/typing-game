@@ -1,6 +1,6 @@
 import './style.css'
 
-import { text1 } from './data.js'
+import { texts } from './data.js'
 
 const $ = (element) => document.querySelector(element)
 const $$ = (element) => document.querySelectorAll(element)
@@ -21,8 +21,8 @@ const wpm = $('#wpm')
 // Constants
 const INITIAL_TIME = 0
 
-let letters = text1.split('')
-let words = text1.split(' ')
+let letters = texts[0].text.split('')
+let words = texts[0].text.split(' ')
 let wordsAverage = parseInt(letters.length) / parseInt(words.length)
 let currentTime
 let isPlaying
@@ -34,6 +34,8 @@ initEvents()
 reload.addEventListener('click', function () {
   initGame()
   initEvents()
+  reload.blur()
+  wpm.innerText = 0
 })
 
 function initGame() {
@@ -115,9 +117,11 @@ function onkeyUp(event) {
   let activeContent = active.innerText.trim()
 
   let { key } = event
-  console.log(key)
+  // console.log(event)
 
-  let validkey = key.length === 1 ? activeContent : 'invalid'
+  let validkey =
+    key === ' ' ? ' ' : key.length === 1 ? activeContent : 'invalid'
+
   if (validkey === 'invalid') {
     return
   }
