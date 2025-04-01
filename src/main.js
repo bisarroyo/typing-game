@@ -114,13 +114,13 @@ function onkeyDown(event) {
 
 function onkeyUp(event) {
   let active = $('span.active')
-  let activeContent = active.innerText.trim()
+  let activeContent = active.innerText
 
   let { key } = event
-  // console.log(event)
+  // console.log(key)
 
-  let validkey =
-    key === ' ' ? ' ' : key.length === 1 ? activeContent : 'invalid'
+  let validkey = key.length === 1 ? activeContent : 'invalid'
+  console.log(validkey)
 
   if (validkey === 'invalid') {
     return
