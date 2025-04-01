@@ -117,10 +117,8 @@ function onkeyUp(event) {
   let activeContent = active.innerText
 
   let { key } = event
-  // console.log(key)
 
   let validkey = key.length === 1 ? activeContent : 'invalid'
-  console.log(validkey)
 
   if (validkey === 'invalid') {
     return
